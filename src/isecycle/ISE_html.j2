@@ -1,0 +1,21 @@
+{%- include 'datatable_header.j2' %}
+{%- if api == "version" %}
+<h1> ISE Version</h1>
+<table id = "datatable">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Type of Node</th>
+            <th>Version</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ data_to_template.product['@name']}}</td>
+            <td>{{ data_to_template.product.type_of_node }}</td>
+            <td>{{ data_to_template.product.version }}</td>
+        </tr>
+    </tbody>
+</table>
+{%- endif %}
+{%- include 'datatable_footer.j2' %}

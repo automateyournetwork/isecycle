@@ -1,0 +1,4 @@
+product:
+  '@name': Cisco Identity Services Engine
+  type_of_node: '2'
+  version: 3.1.0.518

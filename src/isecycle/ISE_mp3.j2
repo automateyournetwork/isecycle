@@ -1,0 +1,4 @@
+{%- if api == "version" %}
+The Identity Services Engine Monitoring and Troubleshooting Version API discovered the following version:
+The Product Name is {{ data_to_template.product['@name']}} which is a Type of Node {{ data_to_template.product.type_of_node }} running Version {{ data_to_template.product.version }}.
+{%- endif %}

@@ -1,0 +1,5 @@
+{%- if api == "version" %}# ISE MnT Version
+| Product Name | Type of Node | Version |
+| ------------ | ------------ | ------- |
+| {{ data_to_template.product['@name']}} | {{ data_to_template.product.type_of_node }} | {{ data_to_template.product.version }} |
+{%- endif %}
