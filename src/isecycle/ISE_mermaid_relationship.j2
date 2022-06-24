@@ -1,0 +1,9 @@
+{%- if api == "version" %}
+```mermaid
+erDiagram
+    ISE_MnT_Version_API |o--|{ {{ data_to_template.product['@name'] |  replace(" ","_") }} : Type_of_Node_{{ data_to_template.product.type_of_node }}
+    {{ data_to_template.product['@name'] |  replace(" ","_") }} {
+        Version v{{ data_to_template.product.version | replace(".","_")}}
+    }
+```
+{%- endif %}

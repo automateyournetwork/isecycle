@@ -1,0 +1,9 @@
+{%- if api == "version" %}
+```mermaid
+classDiagram
+class {{ data_to_template.product['@name'] | replace(" ","_") }}{
+Type of Node: {{ data_to_template.product.type_of_node }} 
+Version: {{ data_to_template.product.version }}
+}
+```
+{%- endif %}

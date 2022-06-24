@@ -1,0 +1,6 @@
+{%- if api == "version" %}
+```mermaid
+flowchart LR;
+ISE_MnT_Version_API <--> {{ data_to_template.product['@name'] | replace(" ","_") }} <--> {{ data_to_template.product.type_of_node }} <--> {{ data_to_template.product.version }}
+```
+{%- endif %}

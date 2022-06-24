@@ -1,0 +1,6 @@
+Source,Target,Weight
+{%- if api == "version" %}
+ISE_MnT_Version_API,{{ data_to_template.product['@name']}},1
+{{ data_to_template.product['@name']}},Type of Node: {{ data_to_template.product.type_of_node }},2
+{{ data_to_template.product['@name']}},Version: {{ data_to_template.product.version }},2
+{%- endif %}

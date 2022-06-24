@@ -1,0 +1,11 @@
+{%- if api == "version" %}
+```mermaid
+stateDiagram
+    direction LR
+ISE_MnT_Version_API --> {{ data_to_template.product['@name'] |  replace(" ","_") }}
+{{ data_to_template.product['@name'] |  replace(" ","_") }} --> Type_of_Node_{{ data_to_template.product.type_of_node }}
+state Type_of_Node_{{ data_to_template.product.type_of_node }}{
+        Version v{{ data_to_template.product.version | replace(".","_")}}
+}
+```
+{%- endif %}
