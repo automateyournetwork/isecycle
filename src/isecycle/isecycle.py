@@ -46,15 +46,33 @@ class Isecycle():
         else:
             print_json(parsed_json)
 
-    def capture_state(self):
+    def set_urlPath(self):
         if self.api == "version":
-            url = f"{ self.url }/admin/API/mnt/Version"
-            version = requests.request("GET", url, auth=(self.username, self.password), verify=False)
-            xmlParse = xmltodict.parse(version.text)
-            parsed_json = json.loads(json.dumps(xmlParse))
+            api_path = f"{ self.url }/admin/API/mnt/Version"
+        if self.api == "node":
+            api_path = f"{ self.url }/ers/config/node"
+        else:
+            click.secho(f"{ self.api } is not a supported API. Please check the READ ME",
+            fg='red')
+        return(api_path)
+
+    def capture_state(self):
+            self.api_path = self.set_urlPath()
+            click.secho(f"The following URL was used for this request { self.api_path }",
+            fg='green')
+            if "mnt" in self.api_path:
+                api_data = requests.request("GET", self.api_path, auth=(self.username, self.password), verify=False)                
+                xmlParse = xmltodict.parse(api_data.text)
+                parsed_json = json.loads(json.dumps(xmlParse))
+            else:
+                headers = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                }                
+                api_data = requests.request("GET", self.api_path, headers=headers, auth=(self.username, self.password), verify=False)                
+                all_json = api_data.json()
+                parsed_json = all_json['SearchResult']['resources']
             return(parsed_json)
-        else: 
-            click.secho(f"{ self.api } is not a supported API. Please check the READ ME")
 
     def pick_filetype(self, parsed_json):
         if self.filetype == "none":
@@ -87,6 +105,8 @@ class Isecycle():
             self.state_file(parsed_json)
         elif self.filetype == "graph":
             self.graph_file(parsed_json)
+        elif self.filetype == "all":
+            self.all_files(parsed_json)
 
     def json_file(self, parsed_json):
         with open(f'{ self.api }.json', 'w' ) as f:
@@ -149,16 +169,44 @@ class Isecycle():
         template_dir = Path(__file__).resolve().parent
         env = Environment(loader=FileSystemLoader(str(template_dir)))
         mp3_template = env.get_template('ISE_mp3.j2')
-        mp3_output = mp3_template.render(api = self.api,
-                                         data_to_template = json.loads(parsed_json))
         language = "en-US"
-        mp3 = gTTS(text = mp3_output, lang=language)
-        mp3.save(f'{ self.api }.mp3')
-        click.secho(f'MP3 file created at { sys.path[0] }/{ self.api }.mp3',
-        fg='green')
+        if "mnt" in self.api_path:
+            mp3_output = mp3_template.render(api = self.api,
+                                             data_to_template = json.loads(parsed_json))
+            mp3 = gTTS(text = mp3_output, lang=language)
+            mp3.save(f'{ self.api }.mp3')
+            click.secho(f'MP3 file created at { sys.path[0] }/{ self.api }.mp3',
+                fg='green')
+        else:
+            dict_json = json.loads(parsed_json)
+            for result in dict_json:
+                print(result)
+                mp3_output = mp3_template.render(api = self.api,
+                        data_to_template=result
+                        )
+                mp3 = gTTS(text = mp3_output, lang=language)
+                # Save MP3
+                mp3.save(f'{self.api} {result["name"]} MP3.mp3')
+                click.secho(f'MP3 file created at { sys.path[0] }/{ self.api } {result["id"]}.mp3',
+                    fg='green')
 
     def svg_file(self, parsed_json):
         console = Console(record=True)
+        if self.api == "node":
+            dict_json = json.loads(parsed_json)
+            print(dict_json)
+            table = Table(title=f"ISE ERS {self.api} API")
+            table.add_column("Node Name", style="bold blue", justify="center")
+            table.add_column("Node ID", style="bold green", justify="center")
+            table.add_column("URL", style="bold green", justify="center")
+            for node in dict_json:
+                table.add_row(f"{ node['name'] }",f"{ node['id'] }",f"{ node['link']['href'] }")
+            console.print(table, justify="center")
+            console.save_svg(f"{self.api}.svg",
+                             title=f"ISE ERS {self.api} API")
+            click.secho(f'SVG file created at { sys.path[0] }/{ self.api }.svg',
+                fg='green')
+
         if self.api == "version":
             dict_json = json.loads(parsed_json)
             print(dict_json)
@@ -246,7 +294,23 @@ class Isecycle():
         with open(f'{self.api}_graph.csv', 'w') as f:
             f.write(graph_csv_output)         
         return
-        
+
+    def all_files(self, parsed_json):
+        self.json_file(parsed_json)
+        self.yaml_file(parsed_json)
+        self.csv_file(parsed_json)
+        self.markdown_file(parsed_json)
+        self.html_file(parsed_json)
+        self.mindmap_file(parsed_json)
+        self.mp3_file(parsed_json)
+        self.svg_file(parsed_json)
+        self.png_file(parsed_json)
+        self.flowchart_file(parsed_json)
+        self.class_file(parsed_json)
+        self.relationship_file(parsed_json)
+        self.state_file(parsed_json)
+        self.graph_file(parsed_json)
+
 @click.command()
 @click.option('--url',
     prompt="ISE URL",

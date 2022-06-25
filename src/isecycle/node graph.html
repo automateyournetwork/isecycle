@@ -1,0 +1,121 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vis-network@latest/styles/vis-network.css" type="text/css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vis-network@latest/dist/vis-network.min.js"> </script>
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 1500;
+            height: 1000;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+        #config {
+            float: left;
+            width: 400px;
+            height: 600px;
+        }
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<div id = "config"></div>
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"id": "ISE_ERS_Node_API", "label": "ISE_ERS_Node_API", "shape": "dot", "size": 10}, {"id": "ise-1", "label": "ise-1", "shape": "dot", "size": 10}, {"id": "ise-2", "label": "ise-2", "shape": "dot", "size": 10}, {"id": "ise-3", "label": "ise-3", "shape": "dot", "size": 10}, {"id": "ise-4", "label": "ise-4", "shape": "dot", "size": 10}, {"id": "ID: fa0ddee0-1094-11ec-9899-005056bf1031", "label": "ID: fa0ddee0-1094-11ec-9899-005056bf1031", "shape": "dot", "size": 10}, {"id": "URL: https://10.10.20.77/ers/config/node/fa0ddee0-1094-11ec-9899-005056bf1031", "label": "URL: https://10.10.20.77/ers/config/node/fa0ddee0-1094-11ec-9899-005056bf1031", "shape": "dot", "size": 10}, {"id": "ID: cb574c10-abe1-11ec-afaa-7a2b76f8718c", "label": "ID: cb574c10-abe1-11ec-afaa-7a2b76f8718c", "shape": "dot", "size": 10}, {"id": "URL: https://10.10.20.77/ers/config/node/cb574c10-abe1-11ec-afaa-7a2b76f8718c", "label": "URL: https://10.10.20.77/ers/config/node/cb574c10-abe1-11ec-afaa-7a2b76f8718c", "shape": "dot", "size": 10}, {"id": "ID: feb37d90-abe1-11ec-afaa-7a2b76f8718c", "label": "ID: feb37d90-abe1-11ec-afaa-7a2b76f8718c", "shape": "dot", "size": 10}, {"id": "URL: https://10.10.20.77/ers/config/node/feb37d90-abe1-11ec-afaa-7a2b76f8718c", "label": "URL: https://10.10.20.77/ers/config/node/feb37d90-abe1-11ec-afaa-7a2b76f8718c", "shape": "dot", "size": 10}, {"id": "ID: 28b657c0-abe2-11ec-afaa-7a2b76f8718c", "label": "ID: 28b657c0-abe2-11ec-afaa-7a2b76f8718c", "shape": "dot", "size": 10}, {"id": "URL: https://10.10.20.77/ers/config/node/28b657c0-abe2-11ec-afaa-7a2b76f8718c", "label": "URL: https://10.10.20.77/ers/config/node/28b657c0-abe2-11ec-afaa-7a2b76f8718c", "shape": "dot", "size": 10}]);
+        edges = new vis.DataSet([{"Weight": 1, "from": "ISE_ERS_Node_API", "label": 1, "to": "ise-1", "weight": 1}, {"Weight": 1, "from": "ISE_ERS_Node_API", "label": 1, "to": "ise-2", "weight": 1}, {"Weight": 1, "from": "ISE_ERS_Node_API", "label": 1, "to": "ise-3", "weight": 1}, {"Weight": 1, "from": "ISE_ERS_Node_API", "label": 1, "to": "ise-4", "weight": 1}, {"Weight": 2, "from": "ise-1", "label": 1, "to": "ID: fa0ddee0-1094-11ec-9899-005056bf1031", "weight": 1}, {"Weight": 2, "from": "ise-1", "label": 1, "to": "URL: https://10.10.20.77/ers/config/node/fa0ddee0-1094-11ec-9899-005056bf1031", "weight": 1}, {"Weight": 2, "from": "ise-2", "label": 1, "to": "ID: cb574c10-abe1-11ec-afaa-7a2b76f8718c", "weight": 1}, {"Weight": 2, "from": "ise-2", "label": 1, "to": "URL: https://10.10.20.77/ers/config/node/cb574c10-abe1-11ec-afaa-7a2b76f8718c", "weight": 1}, {"Weight": 2, "from": "ise-3", "label": 1, "to": "ID: feb37d90-abe1-11ec-afaa-7a2b76f8718c", "weight": 1}, {"Weight": 2, "from": "ise-3", "label": 1, "to": "URL: https://10.10.20.77/ers/config/node/feb37d90-abe1-11ec-afaa-7a2b76f8718c", "weight": 1}, {"Weight": 2, "from": "ise-4", "label": 1, "to": "ID: 28b657c0-abe2-11ec-afaa-7a2b76f8718c", "weight": 1}, {"Weight": 2, "from": "ise-4", "label": 1, "to": "URL: https://10.10.20.77/ers/config/node/28b657c0-abe2-11ec-afaa-7a2b76f8718c", "weight": 1}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": true,
+        "filter": true
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+        // if this network requires displaying the configure window,
+        // put it in its div
+        options.configure["container"] = document.getElementById("config");
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

@@ -1,6 +1,15 @@
+{%- if api == "node" %}
+# ISE ERS Node API
+## Name
+{%-     for node in data_to_template %}
+### {{ node.name }}
+#### Node ID: {{ node.id }}
+#### [URL]({{ node.link.href }})
+{%-     endfor %}
+{%- else %}
 {%- if api == "version" %}
 # ISE MnT Version API
 ## Product Name: {{ data_to_template.product['@name']}}
 ### Type of Node: {{ data_to_template.product.type_of_node }}
 ### Version: {{ data_to_template.product.version }}
-{%- endif %}
+{%- endif %}{%- endif %}
