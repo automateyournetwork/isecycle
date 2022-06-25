@@ -1,6 +1,27 @@
 {%- include 'datatable_header.j2' %}
+{%- if api == "node" %}
+<h1> ISE ERS Node</h1>
+<table id = "datatable">
+    <thead>
+        <tr>
+            <th>Node ID</th>
+            <th>Name</th>
+            <th>URL</th>
+        </tr>
+    </thead>
+    <tbody>
+{%-     for node in data_to_template %}
+        <tr>
+            <td>{{ node.id }}</td>
+            <td>{{ node.name }}</td>
+            <td><a href="{{ node.link.href }}">URL</a></td>
+        </tr>
+{%-     endfor %}
+    </tbody>
+</table>
+{%- endif %}
 {%- if api == "version" %}
-<h1> ISE Version</h1>
+<h1> ISE MnT Version</h1>
 <table id = "datatable">
     <thead>
         <tr>

@@ -1,3 +1,15 @@
+{%- if api == "node" %}
+```mermaid
+classDiagram
+{%-     for node in data_to_template %}
+class {{ node.name | replace("-","_") }}{
+ID: {{ node.id }}
+URL: {{ node.link.href }}
+}
+{%-    endfor %}
+
+```
+{%- else %}
 {%- if api == "version" %}
 ```mermaid
 classDiagram
@@ -6,4 +18,4 @@ Type of Node: {{ data_to_template.product.type_of_node }}
 Version: {{ data_to_template.product.version }}
 }
 ```
-{%- endif %}
+{%- endif %}{%- endif %}

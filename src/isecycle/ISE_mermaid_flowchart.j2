@@ -1,6 +1,14 @@
+{%- if api == "node" %}
+```mermaid
+flowchart LR;
+{%-     for node in data_to_template %}
+ISE_ERS_Node_API <--> Name_{{ node.name }} <--> ID_{{ node.id }} <--> {{ node.link.href }}
+{%-     endfor %}
+```
+{%- else %}
 {%- if api == "version" %}
 ```mermaid
 flowchart LR;
 ISE_MnT_Version_API <--> {{ data_to_template.product['@name'] | replace(" ","_") }} <--> {{ data_to_template.product.type_of_node }} <--> {{ data_to_template.product.version }}
 ```
-{%- endif %}
+{%- endif %}{%- endif %}

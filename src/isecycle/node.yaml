@@ -1,0 +1,24 @@
+- id: fa0ddee0-1094-11ec-9899-005056bf1031
+  link:
+    href: https://10.10.20.77/ers/config/node/fa0ddee0-1094-11ec-9899-005056bf1031
+    rel: self
+    type: application/json
+  name: ise-1
+- id: cb574c10-abe1-11ec-afaa-7a2b76f8718c
+  link:
+    href: https://10.10.20.77/ers/config/node/cb574c10-abe1-11ec-afaa-7a2b76f8718c
+    rel: self
+    type: application/json
+  name: ise-2
+- id: feb37d90-abe1-11ec-afaa-7a2b76f8718c
+  link:
+    href: https://10.10.20.77/ers/config/node/feb37d90-abe1-11ec-afaa-7a2b76f8718c
+    rel: self
+    type: application/json
+  name: ise-3
+- id: 28b657c0-abe2-11ec-afaa-7a2b76f8718c
+  link:
+    href: https://10.10.20.77/ers/config/node/28b657c0-abe2-11ec-afaa-7a2b76f8718c
+    rel: self
+    type: application/json
+  name: ise-4

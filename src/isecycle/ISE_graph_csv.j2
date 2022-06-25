@@ -1,6 +1,13 @@
 Source,Target,Weight
+{%- if api == "node" %}
+{%-     for node in data_to_template %}
+ISE_ERS_Node_API,{{ node.name }},1
+{{ node.name }},ID: {{ node.id }},2
+{{ node.name }},URL: {{ node.link.href }},2
+{%-     endfor %}
+{%- else %}
 {%- if api == "version" %}
 ISE_MnT_Version_API,{{ data_to_template.product['@name']}},1
 {{ data_to_template.product['@name']}},Type of Node: {{ data_to_template.product.type_of_node }},2
 {{ data_to_template.product['@name']}},Version: {{ data_to_template.product.version }},2
-{%- endif %}
+{%- endif %}{%- endif %}
