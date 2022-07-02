@@ -2,6 +2,7 @@ import sys
 import os
 import json
 import requests
+from requests_toolbelt.multipart.encoder import MultipartEncoder
 import rich_click as click
 import yaml
 import xmltodict
@@ -30,12 +31,16 @@ class Isecycle():
                 username,
                 password,
                 api,
-                filetype):
+                filetype,
+                room,
+                token,):
         self.url = url
         self.username = username
         self.password = password
         self.api = api
         self.filetype = filetype
+        self.room = room
+        self.token = token
 
     def isecycle(self):
         parsed_json = json.dumps(self.capture_state(), indent=4, sort_keys=True)
@@ -45,12 +50,16 @@ class Isecycle():
                 print_json(parsed_json)
         else:
             print_json(parsed_json)
+        if self.room != "none":
+            self.chatbot(parsed_json)
 
     def set_urlPath(self):
         if self.api == "version":
             api_path = f"{ self.url }/admin/API/mnt/Version"
-        if self.api == "node":
+        elif self.api == "node":
             api_path = f"{ self.url }/ers/config/node"
+        elif self.api == "policy-set":
+            api_path = f"{ self.url }/api/v1/policy/network-access/policy-set"            
         else:
             click.secho(f"{ self.api } is not a supported API. Please check the READ ME",
             fg='red')
@@ -64,7 +73,7 @@ class Isecycle():
                 api_data = requests.request("GET", self.api_path, auth=(self.username, self.password), verify=False)                
                 xmlParse = xmltodict.parse(api_data.text)
                 parsed_json = json.loads(json.dumps(xmlParse))
-            else:
+            elif "ers" in self.api_path:
                 headers = {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -72,6 +81,14 @@ class Isecycle():
                 api_data = requests.request("GET", self.api_path, headers=headers, auth=(self.username, self.password), verify=False)                
                 all_json = api_data.json()
                 parsed_json = all_json['SearchResult']['resources']
+            else:
+                headers = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                }                
+                api_data = requests.request("GET", self.api_path, headers=headers, auth=(self.username, self.password), verify=False)                
+                all_json = api_data.json()
+                parsed_json = all_json['response']
             return(parsed_json)
 
     def pick_filetype(self, parsed_json):
@@ -81,6 +98,8 @@ class Isecycle():
             self.json_file(parsed_json)
         elif self.filetype == "yaml":
             self.yaml_file(parsed_json)
+        elif self.filetype == "text":
+            self.text_file(parsed_json)            
         elif self.filetype == "csv":
             self.csv_file(parsed_json)
         elif self.filetype == "markdown":
@@ -119,6 +138,17 @@ class Isecycle():
         with open(f'{ self.api }.yaml', 'w' ) as f:
             f.write(clean_yaml)
         click.secho(f'YAML file created at { sys.path[0] }/{ self.api }.yaml',
+        fg='green')
+
+    def text_file(self, parsed_json):
+        template_dir = Path(__file__).resolve().parent
+        env = Environment(loader=FileSystemLoader(str(template_dir)))
+        text_template = env.get_template('ISE_text.j2')
+        text_output = text_template.render(api = self.api,
+                                         data_to_template = json.loads(parsed_json))
+        with open(f'{ self.api }.txt', 'w' ) as f:
+            f.write(text_output)
+        click.secho(f'Text file created at { sys.path[0] }/{ self.api }.txt',
         fg='green')
 
     def csv_file(self, parsed_json):
@@ -204,6 +234,29 @@ class Isecycle():
             console.print(table, justify="center")
             console.save_svg(f"{self.api}.svg",
                              title=f"ISE ERS {self.api} API")
+            click.secho(f'SVG file created at { sys.path[0] }/{ self.api }.svg',
+                fg='green')
+
+        if self.api == "policy-set":
+            dict_json = json.loads(parsed_json)
+            print(dict_json)
+            table = Table(title=f"ISE OpenAPI {self.api} API")
+            table.add_column("Name", style="bold blue", justify="center")
+            table.add_column("Serice Name", style="bold green", justify="center")
+            table.add_column("Description", style="bold green", justify="center")
+            table.add_column("ID", style="bold green", justify="center")
+            table.add_column("State", style="bold green", justify="center")
+            table.add_column("Condition", style="bold green", justify="center")
+            table.add_column("Default", style="bold green", justify="center")
+            table.add_column("Hits", style="bold green", justify="center")
+            table.add_column("Rank", style="bold green", justify="center")
+            table.add_column("Is Proxy", style="bold green", justify="center")
+            table.add_column("URL", style="bold green", justify="center")
+            for policy in dict_json:
+                table.add_row(f"{ policy['name'] }",f"{ policy['serviceName'] }",f"{ policy['description'] }",f"{ policy['id'] }",f"{ policy['state'] }",f"{ policy['condition'] }",f"{ policy['default'] }",f"{ policy['hitCounts'] }",f"{ policy['rank'] }",f"{ policy['isProxy'] }",f"{ policy['link']['href'] }")
+            console.print(table, justify="center")
+            console.save_svg(f"{self.api}.svg",
+                             title=f"ISE OpenAPI {self.api} API")
             click.secho(f'SVG file created at { sys.path[0] }/{ self.api }.svg',
                 fg='green')
 
@@ -311,6 +364,32 @@ class Isecycle():
         self.state_file(parsed_json)
         self.graph_file(parsed_json)
 
+    def chatbot(self, parsed_json):
+        template_dir = Path(__file__).resolve().parent
+        env = Environment(loader=FileSystemLoader(str(template_dir)))
+        adaptive_card_template = env.get_template('ISE_adaptive_card.j2')
+        dict_json = json.loads(parsed_json)
+        for result in dict_json:
+            adatpive_card_output = adaptive_card_template.render(api = self.api,
+                data_to_template=result,
+                roomid = self.room)        
+            webex_adaptive_card_response = requests.post('https://webexapis.com/v1/messages', data=adatpive_card_output, headers={"Content-Type": "application/json", "Authorization": f"Bearer { self.token }" })
+            print('The POST to WebEx had a response code of ' + str(webex_adaptive_card_response.status_code) + 'due to' + webex_adaptive_card_response.reason)
+        if self.filetype == "text":
+            m = MultipartEncoder({'roomId': self.room,
+            'text': f'ISE { self.api } Text File',
+            'files': (f'{ self.api }.txt', open(f'{ self.api }.txt', "rb"),
+                      'text/text' )})
+            webex_file_response = requests.post('https://webexapis.com/v1/messages', data=m, headers={"Content-Type": m.content_type, "Authorization": f"Bearer { self.token }" })
+            print('The POST to WebEx had a response code of ' + str(webex_file_response.status_code) + 'due to' + webex_file_response.reason)
+        elif self.filetype == "csv":
+            m = MultipartEncoder({'roomId': self.room,
+            'text': f'ISE { self.api } CSV File',
+            'files': (f'{ self.api }.csv', open(f'{ self.api }.csv', "rb"),
+                      'text/text' )})
+            webex_file_response = requests.post('https://webexapis.com/v1/messages', data=m, headers={"Content-Type": m.content_type, "Authorization": f"Bearer { self.token }" })
+            print('The POST to WebEx had a response code of ' + str(webex_file_response.status_code) + 'due to' + webex_file_response.reason)
+
 @click.command()
 @click.option('--url',
     prompt="ISE URL",
@@ -335,6 +414,7 @@ class Isecycle():
     type=click.Choice(['none',
                         'json',
                         'yaml',
+                        'text',
                         'csv',
                         'html',
                         'markdown',
@@ -348,18 +428,31 @@ class Isecycle():
                         'state',
                         'graph',
                         'all']))
-
+@click.option('--room',
+    prompt="Webex Room",
+    help="The Webex Room ID",
+    required=False,
+    default="none",envvar="ROOM")
+@click.option('--token',
+    prompt="Webex Token",
+    help="The Webex Token",
+    required=False,
+    default="none",envvar="TOKEN")
 def cli(url,
         username,
         password,
         api,
-        filetype
+        filetype,
+        room,
+        token
     ):
     invoke_class = Isecycle(url,
                             username,
                             password,
                             api,
-                            filetype
+                            filetype,
+                            room,
+                            token
                             )
     invoke_class.isecycle()
 

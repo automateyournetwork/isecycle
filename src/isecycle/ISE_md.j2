@@ -5,8 +5,15 @@
 | {{ node.id }} | {{ node.name }} | [URL]({{ node.link.href }}) |
 {%-     endfor %}
 {%- else %}
+{%- if api == "policy-set" %}
+{%-     for policy in data_to_template %}# ISE OpenAPI Policy Sets
+| Name | Service Name | Description | ID | State | Condition | Default | Hits | Rank | Is Proxy | URL |
+| ---- | ------------ | ----------- | -- | ----- | --------- | ------- | ---- | ---- | -------- | --- |
+| {{ policy.name }} | {{ policy.serviceName }} | {{ policy.description }} | {{ policy.id }} | {{ policy.state }} | {{ policy.condition }} | {{ policy.default }} | {{ policy.hitCounts }} | {{ policy.rank }} | {{ policy.isProxy }} | [URL]({{ policy.link.href }}) |
+{%-     endfor %}
+{%- else %}
 {%- if api == "version" %}# ISE MnT Version
 | Product Name | Type of Node | Version |
 | ------------ | ------------ | ------- |
 | {{ data_to_template.product['@name']}} | {{ data_to_template.product.type_of_node }} | {{ data_to_template.product.version }} |
-{%- endif %}{%- endif %}
+{%- endif %}{%- endif %}{%- endif %}

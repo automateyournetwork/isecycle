@@ -3,10 +3,31 @@
 ```mermaid
 stateDiagram
     direction LR
-ISE_MnT_Version_API --> {{ node.name |  replace("-","_") }}
-{{ node.name |  replace("-","_") }} --> ID_{{ node.id |  replace("-","_") }}
-state ID_{{ node.id |  replace("-","_") }}{
+ISE_ERS_Node_API --> {{ node.name | replace("-","_") }}
+{{ node.name | replace("-","_") }} --> ID_{{ node.id | replace("-","_") }}
+state ID_{{ node.id | replace("-","_") }}{
         URL {{ node.link.href }}
+}
+```
+{%-     endfor %}
+{%- else %}
+{%- if api == "policy-set" %}
+{%-     for policy in data_to_template %}
+```mermaid
+stateDiagram
+    direction LR
+ISE_OpenAPI_Policy_Set_API --> {{ policy.name |  replace("-","_") }}
+{{ policy.name |  replace("-","_") | replace(" ","_") }} --> Service_Name{{ policy.serviceName | replace("-","_") | replace(" ","_") }}
+state Service_Name{{ policy.serviceName | replace("-","_") | replace(" ","_") }}{
+        Description --> {{ policy.description | replace(" ","_") }}
+        ID --> {{ policy.id | replace("-","_") }}
+        State --> {{ policy.state }}
+        Condition --> {{ policy.condition }}
+        Default --> {{ policy.default }}
+        Hits --> {{ policy.hitCounts }}
+        Rank --> {{ policy.rank }}
+        IsProxy --> {{ policy.isProxy }}
+        URL --> {{ policy.link.href }}
 }
 ```
 {%-     endfor %}
@@ -15,10 +36,10 @@ state ID_{{ node.id |  replace("-","_") }}{
 ```mermaid
 stateDiagram
     direction LR
-ISE_MnT_Version_API --> {{ data_to_template.product['@name'] |  replace(" ","_") }}
-{{ data_to_template.product['@name'] |  replace(" ","_") }} --> Type_of_Node_{{ data_to_template.product.type_of_node }}
+ISE_MnT_Version_API --> {{ data_to_template.product['@name'] | replace(" ","_") }}
+{{ data_to_template.product['@name'] | replace(" ","_") }} --> Type_of_Node_{{ data_to_template.product.type_of_node }}
 state Type_of_Node_{{ data_to_template.product.type_of_node }}{
         Version v{{ data_to_template.product.version | replace(".","_")}}
 }
 ```
-{%- endif %}{%- endif %}
+{%- endif %}{%- endif %}{%- endif %}

@@ -20,6 +20,43 @@
     </tbody>
 </table>
 {%- endif %}
+{%- if api == "policy-set" %}
+<h1> ISE OpenAPI Policy Sets</h1>
+<table id = "datatable">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Service Name</th>
+            <th>Description</th>
+            <th>ID</th>
+            <th>State</th>
+            <th>Condition</th>
+            <th>Default</th>
+            <th>Hits</th>
+            <th>Rank</th>
+            <th>Is Proxy</th>
+            <th>URL</th>
+        </tr>
+    </thead>
+    <tbody>
+{%-     for policy in data_to_template %}
+        <tr>
+            <td>{{ policy.name }}</td>
+            <td>{{ policy.serviceName }}</td>
+            <td>{{ policy.description }}</td>
+            <td>{{ policy.id }}</td>
+            <td>{{ policy.state }}</td>
+            <td>{{ policy.condition }}</td>
+            <td>{{ policy.default }}</td>
+            <td>{{ policy.hitCounts }}</td>
+            <td>{{ policy.rank }}</td>
+            <td>{{ policy.isProxy }}</td>
+            <td><a href="{{ policy.link.href }}">URL</a></td>
+        </tr>
+{%-     endfor %}
+    </tbody>
+</table>
+{%- endif %}
 {%- if api == "version" %}
 <h1> ISE MnT Version</h1>
 <table id = "datatable">

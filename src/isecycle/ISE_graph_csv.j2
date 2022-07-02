@@ -6,8 +6,23 @@ ISE_ERS_Node_API,{{ node.name }},1
 {{ node.name }},URL: {{ node.link.href }},2
 {%-     endfor %}
 {%- else %}
+{%- if api == "policy-set" %}
+{%-     for policy in data_to_template %}
+ISE_OpenAPI_Policy_Sets_API,{{ policy.name }},1
+{{ policy.name }},Service Name: {{ policy.serviceName }},2
+{{ policy.name }},Description: {{ policy.description }},2
+{{ policy.name }},ID: {{ policy.id }},2
+{{ policy.name }},State: {{ policy.state }},2
+{{ policy.name }},Condition: {{ policy.condition }},2
+{{ policy.name }},Default: {{ policy.default }},2
+{{ policy.name }},Hits: {{ policy.hitCounts }},2
+{{ policy.name }},Rank: {{ policy.rank }},2
+{{ policy.name }},Is Proxy: {{ policy.isProxy }},2
+{{ policy.name }},URL: {{ policy.link.href }},2
+{%-     endfor %}
+{%- else %}
 {%- if api == "version" %}
 ISE_MnT_Version_API,{{ data_to_template.product['@name']}},1
 {{ data_to_template.product['@name']}},Type of Node: {{ data_to_template.product.type_of_node }},2
 {{ data_to_template.product['@name']}},Version: {{ data_to_template.product.version }},2
-{%- endif %}{%- endif %}
+{%- endif %}{%- endif %}{%- endif %}

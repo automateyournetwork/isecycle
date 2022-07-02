@@ -9,6 +9,24 @@ erDiagram
 ```
 {%-     endfor %}
 {%- else %}
+{%- if api == "policy-set" %}
+{%-     for policy in data_to_template %}
+```mermaid
+erDiagram
+    ISE_OpenAPI_Policy_Sets_API |o--|{ {{ policy.name |  replace("-","_") }} : Service_Name_{{ policy.serviceName | replace(" ","_") }}
+    {{ policy.name |  replace("-","_") }} {
+        Description {{ policy.description | replace(" ","_") }}
+        ID {{ policy.id }}
+        State {{ policy.state }}
+        Condition {{ policy.condition }}
+        Default {{ policy.default }}
+        Hits x{{ policy.hitCounts }}
+        Rank x{{ policy.rank }}
+        IsProxy {{ policy.isProxy }}        
+    }
+```
+{%-     endfor %}
+{%- else %}
 {%- if api == "version" %}
 ```mermaid
 erDiagram
@@ -17,4 +35,4 @@ erDiagram
         Version v{{ data_to_template.product.version | replace(".","_")}}
     }
 ```
-{%- endif %}{%- endif %}
+{%- endif %}{%- endif %}{%- endif %}
