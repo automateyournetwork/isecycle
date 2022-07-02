@@ -7,9 +7,26 @@
 #### [URL]({{ node.link.href }})
 {%-     endfor %}
 {%- else %}
+{%- if api == "policy-set" %}
+# ISE OpenAPI Poicy Set
+## Name
+{%-     for policy in data_to_template %}
+### {{ policy.name }}
+#### Service Name: {{ policy.serviceName }}
+#### Description: {{ policy.description }}
+#### ID: {{ policy.id }}
+#### State: {{ policy.state }}
+#### Condition: {{ policy.condition }}
+#### Default: {{ policy.default }}
+#### Hits: {{ policy.hitCounts }}
+#### Rank: {{ policy.rank }}
+#### Is Proxy: {{ policy.isProxy }}
+#### [URL]({{ policy.link.href }})            
+{%-     endfor %}
+{%- else %}
 {%- if api == "version" %}
 # ISE MnT Version API
 ## Product Name: {{ data_to_template.product['@name']}}
 ### Type of Node: {{ data_to_template.product.type_of_node }}
 ### Version: {{ data_to_template.product.version }}
-{%- endif %}{%- endif %}
+{%- endif %}{%- endif %}{%- endif %}

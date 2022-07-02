@@ -6,9 +6,17 @@ ISE_ERS_Node_API <--> Name_{{ node.name }} <--> ID_{{ node.id }} <--> {{ node.li
 {%-     endfor %}
 ```
 {%- else %}
+{%- if api == "policy-set" %}
+``` mermaid
+flowchart LR;
+{%-     for policy in data_to_template %}
+ISE_OpenAPI_Policy_Set_API <--> Name_{{ policy.name | replace(" ","_") }} <--> Service_Name_{{ policy.serviceName | replace(" ","_") }} <--> Description_{{ policy.description | replace(" ","_") }} <--> ID_{{ policy.id }} <--> State_{{ policy.state }} <--> Condition_{{ policy.condition }} <--> Default_{{ policy.default }} <--> Hit_Count_{{ policy.hitCounts }} <--> Rank_{{ policy.rank }} <--> Is_Proxy_{{ policy.isProxy }} <--> {{ policy.link.href }}
+{%-     endfor %}
+```
+{%- else %}
 {%- if api == "version" %}
 ```mermaid
 flowchart LR;
 ISE_MnT_Version_API <--> {{ data_to_template.product['@name'] | replace(" ","_") }} <--> {{ data_to_template.product.type_of_node }} <--> {{ data_to_template.product.version }}
 ```
-{%- endif %}{%- endif %}
+{%- endif %}{%- endif %}{%- endif %}

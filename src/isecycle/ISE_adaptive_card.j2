@@ -1,0 +1,270 @@
+{%- if api == "policy-set" %}
+{
+  "roomId": "{{ roomid }}",
+  "markdown": "# Identity Services Engine Open API for {{ api }}",
+  "attachments": [
+    {
+      "contentType": "application/vnd.microsoft.card.adaptive",
+      "content": {
+        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+        "type": "AdaptiveCard",
+        "version": "1.0",
+        "body": [
+            {
+            "type": "ColumnSet",
+            "columns": [
+                {
+                    "type": "Column",
+                    "items": [
+                        {
+                            "type": "Image",
+                            "url": "https://developer.webex.com/images/webex-teams-logo.png"
+                        }
+                    ],
+                    "width": "stretch"
+                },
+                {
+                    "type": "Column",
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "text": "ISECycle",
+                            "weight": "lighter",
+                            "color": "accent"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "weight": "Bolder",
+                            "text": "Webex from ISE OpenAPI Policy Set API",
+                            "horizontalAlignment": "Left",
+                            "wrap": true,
+                            "color": "Light",
+                            "size": "Large",
+                            "spacing": "Small"
+                        }
+                    ],
+                    "width": "stretch"
+                }
+            ]
+        },
+        {
+            "type": "ColumnSet",
+            "columns": [
+                {
+                    "type": "Column",
+                    "width": 35,
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "text": "Name:",
+                            "color": "Light"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "Service Name:",
+                            "weight": "Lighter",
+                            "color": "Light",
+                            "spacing": "Small"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "Description:",
+                            "weight": "Lighter",
+                            "color": "Light",
+                            "spacing": "Small"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "ID:",
+                            "color": "Light"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "State:",
+                            "weight": "Lighter",
+                            "color": "Light",
+                            "spacing": "Small"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "Condition:",
+                            "weight": "Lighter",
+                            "color": "Light",
+                            "spacing": "Small"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "Default:",
+                            "weight": "Lighter",
+                            "color": "Light",
+                            "spacing": "Small"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "Hits:",
+                            "weight": "Lighter",
+                            "color": "Light",
+                            "spacing": "Small"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "Rank:",
+                            "weight": "Lighter",
+                            "color": "Light",
+                            "spacing": "Small"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "Is Proxy:",
+                            "weight": "Lighter",
+                            "color": "Light",
+                            "spacing": "Small"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "URL:",
+                            "weight": "Lighter",
+                            "color": "Light",
+                            "spacing": "Small"
+                        }                                                                                                   
+                    ]
+                },
+                {
+                    "type": "Column",
+                    "width": 65,
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "text": "{{ data_to_template.name }}",
+                            "color": "Light"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "{{ data_to_template.serviceName }}",
+                            "color": "Light",
+                            "weight": "Lighter",
+                            "spacing": "Small"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "{{ data_to_template.description }}",
+                            "weight": "Lighter",
+                            "color": "Light",
+                            "spacing": "Small"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "{{ data_to_template.id }}",
+                            "color": "Light"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "{{ data_to_template.state }}",
+                            "color": "Light",
+                            "weight": "Lighter",
+                            "spacing": "Small"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "{{ data_to_template.condition }}",
+                            "weight": "Lighter",
+                            "color": "Light",
+                            "spacing": "Small"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "{{ data_to_template.default }}",
+                            "weight": "Lighter",
+                            "color": "Light",
+                            "spacing": "Small"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "{{ data_to_template.hitCounts }}",
+                            "weight": "Lighter",
+                            "color": "Light",
+                            "spacing": "Small"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "{{ data_to_template.rank }}",
+                            "weight": "Lighter",
+                            "color": "Light",
+                            "spacing": "Small"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "{{ data_to_template.isProxy }}",
+                            "weight": "Lighter",
+                            "color": "Light",
+                            "spacing": "Small"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "[URL]({{ data_to_template.link.href }})",
+                            "weight": "Lighter",
+                            "color": "Light",
+                            "spacing": "Small"
+                        }
+                    ]
+                }
+            ],
+            "spacing": "Padding",
+            "horizontalAlignment": "Center"
+        },
+        {
+            "type": "TextBlock",
+            "text": "The Identity Services Engine OpenAPI {{ api }}",
+            "wrap": true
+        },
+        {
+            "type": "TextBlock",
+            "text": "ISECycle Resources:"
+        },
+        {
+            "type": "ColumnSet",
+            "columns": [
+                {
+                    "type": "Column",
+                    "width": "auto",
+                    "items": [
+                        {
+                            "type": "Image",
+                            "altText": "",
+                            "url": "https://developer.webex.com/images/link-icon.png",
+                            "size": "Small",
+                            "width": "30px"
+                        }
+                    ],
+                    "spacing": "Small"
+                },
+                {
+                    "type": "Column",
+                    "width": "auto",
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "text": "[ISECycle GitHub Repository](https://github.com/automateyournetwork/isecycle)",
+                            "horizontalAlignment": "Left",
+                            "size": "Medium"
+                        }
+                    ],
+                    "verticalContentAlignment": "Center",
+                    "horizontalAlignment": "Left",
+                    "spacing": "Small"
+                    }                           
+            ]
+            }                
+        ],
+          "actions": [
+            {
+              "type": "Action.OpenUrl",
+              "url": "https://www.automateyournetwork.ca/uncategorized/merlin-feature-webex-chatbots-with-pyats/",
+              "title": "Read the full How-To Blog on automateyournetwork.ca"
+            }
+          ]        
+        }
+        }
+    ]
+}
+{%- endif %}

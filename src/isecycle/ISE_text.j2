@@ -1,0 +1,19 @@
+{%- if api == "node" %}
+The Identity Services Engine External RESTful Services Node API found the following Nodes:
+{%-     for node in data_to_template %}
+Node Name {{ node.name }} with an ID of {{ node.id }} and a URL of {{ node.link.href }}
+{%-     endfor %}
+{%- else %}
+{%- if api == "policy-set" %}
+The Identity Services Engine OpenAPI Policy-Set found the following Policy Sets:
+{%-     for policy in data_to_template %}
+The policy-set name is {{ policy.name }} with a service name {{ policy.serviceName }} with a state of {{ policy.state }}. 
+The description is {{ policy.description }}. The condition is {{ policy.condition }}, the default value is {{ policy.default }} and it is a proxy {{ policy.isProxy }}.
+The ID is {{ policy.id }}. There have been {{ policy.hitCounts }} hits. The rank is {{ policy.rank }}. 
+The link to the policy set is {{ policy.link.href }}.
+{%-     endfor %}
+{%- else %}
+{%- if api == "version" %}
+The Identity Services Engine Monitoring and Troubleshooting Version API discovered the following version:
+The Product Name is {{ data_to_template.product['@name']}} which is a Type of Node {{ data_to_template.product.type_of_node }} running Version {{ data_to_template.product.version }}.
+{%- endif %}{%- endif %}{%- endif %}
